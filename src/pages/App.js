@@ -1,8 +1,8 @@
 import React, {Component} from "react";
-import {Layout, Menu, Breadcrumb} from 'antd';
-import {UserOutlined} from '@ant-design/icons';
 import {routes} from '../config/routes'
 import {Switch, Route, withRouter} from 'react-router-dom'
+import {Layout, Menu, Breadcrumb} from 'antd';
+import {UserOutlined, LaptopOutlined, NotificationOutlined, AppleOutlined} from '@ant-design/icons';
 
 const {SubMenu} = Menu;
 const {Header, Content, Sider} = Layout;
@@ -14,50 +14,49 @@ class App extends Component {
 
     render() {
         return (
-            <Layout className='app'>
-                <Header className="header">
-                    <div className="logo"/>
+            <Layout>
+                <Header style={{position: 'fixed', zIndex: 1, width: '100%'}}>
+                    <AppleOutlined style={{color: '#fff', fontSize: 25}}/><AppleOutlined
+                    style={{color: '#fff', fontSize: 25}}/>
                 </Header>
-                <Layout>
-                    <Sider width={200} className="site-layout-background">
+                <Layout style={{padding: '0', marginTop: 64}}>
+                    <Sider width={200} className="site-layout-background" style={{
+                        overflow: 'auto',
+                        height: '100vh',
+                        position: 'fixed',
+                        left: 0,
+                    }}>
                         <Menu
                             mode="inline"
                             defaultSelectedKeys={['1']}
                             defaultOpenKeys={['sub1']}
                             style={{height: '100%', borderRight: 0}}
                         >
-                            {/*<SubMenu key="sub1" icon={<UserOutlined/>} title="用户功能">*/}
-                            {/*    <Menu.Item key="1" onClick={this.toPath.bind(this, 'weather')}>天气查询</Menu.Item>*/}
-                            {/*    <Menu.Item key="2" onClick={this.toPath.bind(this, 'name-list')}>名称列表</Menu.Item>*/}
-                            {/*    <Menu.Item key="3">option3</Menu.Item>*/}
-                            {/*    <Menu.Item key="4">option4</Menu.Item>*/}
-                            {/*</SubMenu>*/}
-                            <Menu.Item key="3"  icon={<UserOutlined/>}>数据统计</Menu.Item>
-                            <Menu.Item key="3"  icon={<UserOutlined/>}>消息通知</Menu.Item>
-                            <Menu.Item key="3"  icon={<UserOutlined/>}>猪猪管理</Menu.Item>
-                            <Menu.Item key="3"  icon={<UserOutlined/>}>猪猪种类</Menu.Item>
-                            <Menu.Item key="3"  icon={<UserOutlined/>}>饲料管理</Menu.Item>
-                            <Menu.Item key="3"  icon={<UserOutlined/>}>订单管理</Menu.Item>
-                            <Menu.Item key="3"  icon={<UserOutlined/>}>采购计划</Menu.Item>
-                            <Menu.Item key="3"  icon={<UserOutlined/>}>供货单位</Menu.Item>
-                            <Menu.Item key="3"  icon={<UserOutlined/>}>出货单位</Menu.Item>
-                            <Menu.Item key="3"  icon={<UserOutlined/>}>预产情况</Menu.Item>
-                            <Menu.Item key="3"  icon={<UserOutlined/>}>伤病情况</Menu.Item>
-                            <Menu.Item key="3"  icon={<UserOutlined/>}>生产资料</Menu.Item>
-                            <Menu.Item key="3"  icon={<UserOutlined/>}>系统参数</Menu.Item>
-                            <Menu.Item key="3"  icon={<UserOutlined/>}>用户管理</Menu.Item>
+                            <SubMenu key="sub1" icon={<UserOutlined/>} title="用户管理">
+                                <Menu.Item key="1" onClick={this.toPath.bind(this, 'account')}>查询用户</Menu.Item>
+                                <Menu.Item key="2">option2</Menu.Item>
+                                <Menu.Item key="3">option3</Menu.Item>
+                                <Menu.Item key="4">option4</Menu.Item>
+                            </SubMenu>
+                            <SubMenu key="sub2" icon={<LaptopOutlined/>} title="subnav 2">
+                                <Menu.Item key="5">option5</Menu.Item>
+                                <Menu.Item key="6">option6</Menu.Item>
+                                <Menu.Item key="7">option7</Menu.Item>
+                                <Menu.Item key="8">option8</Menu.Item>
+                            </SubMenu>
+                            <SubMenu key="sub3" icon={<NotificationOutlined/>} title="subnav 3">
+                                <Menu.Item key="9">option9</Menu.Item>
+                                <Menu.Item key="10">option10</Menu.Item>
+                                <Menu.Item key="11">option11</Menu.Item>
+                                <Menu.Item key="12">option12</Menu.Item>
+                            </SubMenu>
                         </Menu>
                     </Sider>
-                    <Layout style={{padding: '0 24px 24px'}}>
-                        <Breadcrumb style={{margin: '16px 0'}}>
-                            <Breadcrumb.Item>Home</Breadcrumb.Item>
-                            <Breadcrumb.Item>List</Breadcrumb.Item>
-                            <Breadcrumb.Item>App</Breadcrumb.Item>
-                        </Breadcrumb>
+                    <Layout className="site-layout" style={{marginLeft: 200}}>
                         <Content
                             className="site-layout-background"
                             style={{
-                                padding: 24,
+                                padding: 16,
                                 margin: 0,
                                 minHeight: 280,
                             }}

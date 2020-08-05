@@ -1,8 +1,9 @@
+import Account from "../pages/account/account";
 
 export const routes = [
-    // {
-    //     path:'/messages',
-    //     component: Messages
-    // }
+    {
+        path:'/account',
+        component: Account
+    }
 ]
 
