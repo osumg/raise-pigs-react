@@ -51,10 +51,9 @@ class Account extends Component {
         ];
 
         return (
-            <Table dataSource={this.props.dataSource} columns={columns}/>
+            <Table dataSource={this.props.result.dataSource} columns={columns}/>
         );
 
-        // return <div>falsdkjfakl</div>
     }
 }
 

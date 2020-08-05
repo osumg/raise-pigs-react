@@ -1,20 +1,16 @@
 const INIT = 'init';
 
-async function init() {
+function init() {
     return dispatch => {
         fetch('/service/account/find-all')
             .then(response => response.json())
             .then(res => {
-                dispatch(send(res))
+                dispatch({
+                    type: INIT,
+                    dataSource: res
+                })
             })
             .catch(error => console.error(error))
-    }
-}
-
-function send(param) {
-    return {
-        type: INIT,
-        dataSource: param
     }
 }
 
@@ -25,7 +21,7 @@ const defaultState = {
 export default function accountReducer(state = defaultState, action) {
     switch (action.type) {
         case INIT:
-            return {...state, dataSource: action.dataSource};
+            return {...state,dataSource: action.dataSource};
         default:
             return {...state};
     }

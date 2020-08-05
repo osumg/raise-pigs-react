@@ -1,7 +1,7 @@
 import React, {Component} from "react";
 import {routes} from '../config/routes'
 import {Switch, Route, withRouter} from 'react-router-dom'
-import {Layout, Menu, Breadcrumb} from 'antd';
+import {Layout, Menu} from 'antd';
 import {UserOutlined, LaptopOutlined, NotificationOutlined, AppleOutlined} from '@ant-design/icons';
 
 const {SubMenu} = Menu;
@@ -15,9 +15,11 @@ class App extends Component {
     render() {
         return (
             <Layout>
-                <Header style={{position: 'fixed', zIndex: 1, width: '100%'}}>
+                <Header style={{position: 'fixed', zIndex: 1, width: '100%',display:'flex',alignItems:'center'}}>
                     <AppleOutlined style={{color: '#fff', fontSize: 25}}/><AppleOutlined
+                    style={{color: '#fff', fontSize: 25}}/><AppleOutlined
                     style={{color: '#fff', fontSize: 25}}/>
+                    <div style={{fontSize:30,color:'#fff'}}>&nbsp;&nbsp;&nbsp;&nbsp;三果养猪场</div>
                 </Header>
                 <Layout style={{padding: '0', marginTop: 64}}>
                     <Sider width={200} className="site-layout-background" style={{
