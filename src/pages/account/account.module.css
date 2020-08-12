@@ -1,0 +1,32 @@
+.input-span{
+    font-size: 14px;
+    color: #333;
+}
+
+.input-item{
+    margin-right: 30px;
+}
+
+.search-input{
+    margin-left: 5px;
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.search-input-left{
+    display: flex;
+    align-items: center;
+}
+
+.search-input-right{
+    display: flex;
+    align-items: center;
+}
+
+.modal-row{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-right: 30px;
+}

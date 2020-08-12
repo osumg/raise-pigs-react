@@ -1,13 +1,13 @@
 import React, {Component} from "react";
 import {routes} from '../config/routes'
-import {Switch, Route, withRouter} from 'react-router-dom'
+import {Switch, Route} from 'react-router-dom'
 import {Layout, Menu} from 'antd';
 import {UserOutlined, LaptopOutlined, NotificationOutlined, AppleOutlined} from '@ant-design/icons';
 
 const {SubMenu} = Menu;
 const {Header, Content, Sider} = Layout;
 
-class App extends Component {
+export default class Main extends Component {
     toPath = (path) => {
         this.props.history.push(`/${path}`);
     }
@@ -74,4 +74,4 @@ class App extends Component {
     }
 }
 
-export default withRouter(App)
+

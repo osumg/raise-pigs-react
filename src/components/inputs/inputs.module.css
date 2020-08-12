@@ -1,0 +1,21 @@
+.main-input {
+    display: flex;
+    width: 300px;
+    align-items: center;
+}
+
+.input-span {
+    width: 100px;
+    color: #333;
+    text-align: right;
+}
+
+.input-comp {
+    margin: 10px 0;
+}
+
+.tip{
+    font-size: 12px;
+    color: red;
+    margin-left: 100px;
+}

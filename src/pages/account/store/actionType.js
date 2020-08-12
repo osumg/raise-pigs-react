@@ -1,0 +1,15 @@
+const actionType = {
+    SPIN: 'SPIN',
+    INIT: 'INIT',
+    SET_ACCOUNT: 'SET_ACCOUNT',
+    SET_VISIBLE: 'SET_VISIBLE',
+    SET_MODAL_ACCOUNT: 'SET_MODAL_ACCOUNT',
+    SET_ACCOUNT_TYPE: 'SET_ACCOUNT_TYPE',
+    SET_PWD: 'SET_PWD',
+    SET_RE_PWD: 'SET_RE_PWD',
+    SET_DESCRIPTION: 'SET_DESCRIPTION',
+    ADD_CHECK: 'ADD_CHECK',
+    ADD: 'ADD'
+}
+
+export default actionType;

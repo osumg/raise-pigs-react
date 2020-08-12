@@ -1,0 +1,55 @@
+.main {
+    background-color: #041527;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    padding-top: 100px;
+}
+
+.icon {
+    padding: 10px;
+    background-color: #ffffff;
+    border-radius: 50%;
+}
+
+.title {
+    font-size: 18px;
+    color: #ffffff;
+    margin: 20px 0;
+}
+
+.login {
+    width: 300px;
+    height: 260px;
+    background-color: #fff;
+    border-radius: 5px;
+}
+
+.loginText {
+    font-size: 16px;
+    font-weight: bold;
+    margin-top: 20px;
+    margin-left: 20px;
+}
+
+
+.inputDiv {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-top: 10px;
+}
+
+.checkboxDiv {
+    display: flex;
+    width: 260px;
+    margin-top: 10px;
+    justify-content: space-between;
+}
+
+.registerUser {
+    display: flex;
+    justify-content: flex-end;
+}
