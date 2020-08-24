@@ -11,7 +11,7 @@ const showSpin = fun => {
 const init = () => {
     return dispatch => {
         showSpin(dispatch);
-        fetchGet('service/account/find-all', res => {
+        fetchGet('/service/sys-user/find-all', res => {
             dispatch({
                 type: actionType.INIT,
                 dataSource: res,
@@ -31,7 +31,7 @@ const setAccount = e => {
 const search = account => {
     return dispatch => {
         showSpin(dispatch);
-        fetchPost('/service/account/find-by', {
+        fetchPost('/account/find-by', {
             account
         }, res => {
             dispatch({

@@ -2,22 +2,44 @@ import React, {Component} from "react";
 import styles from './login.module.css';
 import {DashboardOutlined} from '@ant-design/icons';
 import {Input, Checkbox, Button} from "antd";
+import {connect} from "react-redux";
+import storeAction from "./store/action";
+import {fetchFormPost} from "../../../utils/fetchUtils";
 
-export default class Login extends Component {
+@connect(state => ({storeState: state.loginReducer}), storeAction)
+class Login extends Component {
 
-    state = {
-        isLogin: true,
-
+    login = () => {
+        let {username, password} = this.props.storeState;
+        fetchFormPost('/login',
+            'username=' + username +
+            '&password=' + password, res => {
+                localStorage.setItem("token", res.token);
+                localStorage.setItem("userInfo", res.userInfo);
+                this.props.history.push("/service");
+            })
     }
 
-    changeType = () => {
-        this.setState({
-            isLogin: !this.state.isLogin
-        })
+    pressEnter1 = () => {
+        this.pwdInp.focus();
+    }
+
+    pressEnter2 = () => {
+        if (this.props.storeState.isLogin) {
+            this.btn.click();
+        } else {
+            //zhuce
+        }
     }
 
     render() {
-        const {isLogin} = this.state;
+        const {isLogin} = this.props.storeState;
+        const {
+            setUsername,
+            setPassword,
+            changeLoginType,
+            login
+        } = this.props;
         return (
             <div className={styles.main}>
                 <div className={styles.icon}>
@@ -27,8 +49,11 @@ export default class Login extends Component {
                 <div className={styles.login}>
                     <div className={styles.loginText}>欢迎登录</div>
                     <div className={styles.inputDiv}>
-                        <Input placeholder={'请输入用户账号'} style={{width: '260px'}}/>
-                        <Input.Password placeholder={'请输入密码'} style={{width: '260px', marginTop: '10px'}}/>
+                        <Input placeholder={'请输入用户账号'} style={{width: '260px'}} onChange={setUsername}
+                               onPressEnter={this.pressEnter1}/>
+                        <Input.Password ref={pwdInp => this.pwdInp = pwdInp} placeholder={'请输入密码'}
+                                        style={{width: '260px', marginTop: '10px'}}
+                                        onChange={setPassword} onPressEnter={this.pressEnter2}/>
                         {!isLogin
                             ? <Input.Password placeholder={'请确认密码'} style={{width: '260px', marginTop: '10px'}}/>
                             : null
@@ -41,10 +66,15 @@ export default class Login extends Component {
                             : null
                         }
 
-                        <Button type={isLogin?"primary":'danger'} style={{width: '260px', marginTop: '10px', fontSize: '16px'}}>{isLogin?'登录':'注册'}</Button>
+                        <Button type={isLogin ? "primary" : 'danger'} style={{
+                            width: '260px',
+                            marginTop: '10px',
+                            fontSize: '16px'
+                        }} onClick={this.login} ref={btn => this.btn = btn}>{isLogin ? '登录' : '注册'}</Button>
                     </div>
                     <div className={styles.registerUser}>
-                        <Button type="text" onClick={this.changeType} style={{fontSize: '13px', color: '#666'}}>
+                        <Button type="text" onClick={changeLoginType.bind(this, !isLogin)}
+                                style={{fontSize: '13px', color: '#666'}}>
                             {isLogin ? '注册用户' : '去登陆'}
                         </Button>
                     </div>
@@ -53,3 +83,5 @@ export default class Login extends Component {
         );
     }
 }
+
+export default Login;

@@ -7,9 +7,9 @@ import {UserOutlined, LaptopOutlined, NotificationOutlined, AppleOutlined} from 
 const {SubMenu} = Menu;
 const {Header, Content, Sider} = Layout;
 
-class App extends Component {
+class Home extends Component {
     toPath = (path) => {
-        this.props.history.push(`/${path}`);
+        this.props.history.push(`${path}`);
     }
 
     render() {
@@ -35,7 +35,7 @@ class App extends Component {
                             style={{height: '100%', borderRight: 0}}
                         >
                             <SubMenu key="sub1" icon={<UserOutlined/>} title="用户管理">
-                                <Menu.Item key="1" onClick={this.toPath.bind(this, 'account')}>查询用户</Menu.Item>
+                                <Menu.Item key="1" onClick={this.toPath.bind(this, '/service/account')}>查询用户</Menu.Item>
                                 <Menu.Item key="2">option2</Menu.Item>
                                 <Menu.Item key="3">option3</Menu.Item>
                                 <Menu.Item key="4">option4</Menu.Item>
@@ -74,4 +74,4 @@ class App extends Component {
     }
 }
 
-export default withRouter(App)
+export default Home;
