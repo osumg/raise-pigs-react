@@ -8,19 +8,29 @@ const showSpin = fun => {
     })
 }
 
-const init = () => {
-    return dispatch => {
-        showSpin(dispatch);
-        fetchGet('/service/sys-user/find-all', res => {
-            dispatch({
-                type: actionType.INIT,
-                dataSource: res,
-                spin: false
-            })
+// 获取用户数据列表
+const getListData = (dispatch, current, size) => {
+    showSpin(dispatch);
+    fetchGet(`/service/sys-user/find-user?current=${current}&size=${size}`, res => {
+        dispatch({
+            type: actionType.INIT,
+            dataSource: res.records,
+            total: res.total,
+            current: current,
+            size: size,
+            spin: false,
         })
-    }
+    })
 }
 
+// 初始化
+const init = (current, size) => {
+    return dispatch => {
+        getListData(dispatch, current, size)
+    };
+}
+
+// 设置账号 搜索用
 const setAccount = e => {
     return {
         type: actionType.SET_ACCOUNT,
@@ -28,12 +38,21 @@ const setAccount = e => {
     }
 }
 
+// 设置用户名，modal内
+const setUsername = e => {
+    let username = e.target.value.trim();
+    return {
+        type: actionType.SET_USERNAME,
+        username,
+        usernameTip: ''
+    }
+}
+
+
 const search = account => {
     return dispatch => {
         showSpin(dispatch);
-        fetchPost('/account/find-by', {
-            account
-        }, res => {
+        fetchPost('/service/sys-user/find-by', {account}, res => {
             dispatch({
                 type: actionType.INIT,
                 dataSource: res,
@@ -63,14 +82,6 @@ const setModalAccount = (e) => {
         type: actionType.SET_MODAL_ACCOUNT,
         modalAccount,
         accountTip: '账号由4-16位数字或大小写字母组成'
-    };
-}
-
-const setAccountType = (e) => {
-    let accountType = e.target.value;
-    return {
-        type: actionType.SET_ACCOUNT_TYPE,
-        accountType
     };
 }
 
@@ -107,26 +118,47 @@ const setRePwd = (e, pwd) => {
         rePwdTip: '两次密码输入不一致'
     }
 }
-const setDescription = (e) => {
-    let description = e.target.value;
-    return {
-        type: actionType.SET_DESCRIPTION,
-        description
-    }
+
+// 发送添加账号的请求
+const addAccountFetch = (dispatch, storeState) => {
+    const {
+        modalAccount,
+        pwd,
+        username,
+        current,
+        size
+    } = storeState;
+
+    dispatch({
+        type: actionType.ADD_BEFORE,
+        loading: true
+    })
+    fetchPost('/service/sys-user/add', {
+        account: modalAccount,
+        username: username,
+        password: pwd,
+    }, res => {
+        dispatch({
+            type: actionType.ADD_AFTER,
+            loading: false,
+            visible: false
+        });
+
+        getListData(dispatch, current, size);
+    })
 }
 
 const addAccount = (storeState) => {
     const {
         modalAccount,
-        accountType,
         accountTip,
         pwd,
         pwdTip,
         rePwd,
         rePwdTip,
+        username,
+        usernameTip,
     } = storeState;
-
-    console.log(storeState)
 
     if (!modalAccount || accountTip) {
         return {
@@ -134,21 +166,24 @@ const addAccount = (storeState) => {
             accountTip: accountTip || '用户账号不能为空'
         }
     }
-
+    if (!username || usernameTip) {
+        return {
+            type: actionType.ADD_CHECK,
+            accountTip: usernameTip || '用户账号不能为空'
+        }
+    }
     if (!pwd || pwdTip) {
         return {
             type: actionType.ADD_CHECK,
             pwdTip: pwdTip || '用户密码不能为空'
         }
     }
-
     if (!rePwd || rePwdTip) {
         return {
             type: actionType.ADD_CHECK,
             rePwdTip: rePwdTip || '请确认密码'
         }
     }
-
     if (pwd !== rePwd) {
         return {
             type: actionType.ADD_CHECK,
@@ -157,19 +192,33 @@ const addAccount = (storeState) => {
     }
 
     return dispatch => {
-        showSpin(dispatch);
-        fetchPost('/service/account/add', {
-            account: modalAccount,
-            type: accountType,
-            password: pwd,
-            createBy: '1'
-        }, res => {
-            dispatch({
-                type: actionType.ADD,
-                visible: false,
-                spin: false
-            })
+        // 验证账号是否存在
+        fetchGet(`/service/sys-user/find/${modalAccount}`, res => {
+            if (!res.hasOne) {
+                addAccountFetch(dispatch, storeState);
+            } else {
+                dispatch({
+                    type: actionType.SET_MODAL_ACCOUNT,
+                    modalAccount,
+                    accountTip: '账号已经存在'
+                })
+            }
         })
+    }
+
+}
+
+const onShowSizeChange = (current, pageSize) => {
+    return dispatch => {
+        getListData(dispatch, current, pageSize);
+    }
+}
+
+const onPaginationChange = (page, pageSize) => {
+    console.log('page:', page);
+    console.log('pageSize:', pageSize);
+    return dispatch => {
+        getListData(dispatch, page, pageSize);
     }
 }
 
@@ -179,9 +228,10 @@ export default {
     search,
     setVisible,
     setModalAccount,
-    setAccountType,
     setPwd,
     setRePwd,
-    setDescription,
-    addAccount
+    addAccount,
+    setUsername,
+    onShowSizeChange,
+    onPaginationChange
 }

@@ -1,55 +1,41 @@
 import React, {Component} from "react";
-import {Table} from "antd";
+import {Table, Pagination} from "antd";
 import {connect} from 'react-redux';
 import storeAction from './store/action'
 import styles from './account.module.css'
 import {Modal, Button, Spin} from 'antd';
-import {KeyValueInput, PasswordInput, TextAreaInput} from "../../components/inputs/inputs";
+import {KeyValueInput, KeyValueInputNoTip, PasswordInput} from "../../components/inputs/inputs";
 
 @connect(state => ({storeState: state.accountReducer}), storeAction)
 class Account extends Component {
     state = {
         columns: [
             {
-                title: 'id',
-                dataIndex: 'accountId',
-                key: 'accountId',
-            },
-            {
                 title: '用户账号',
                 dataIndex: 'account',
                 key: 'account',
             },
             {
-                title: '描述',
-                dataIndex: 'description',
-                key: 'description',
+                title: '姓名',
+                dataIndex: 'username',
+                key: 'username',
+            },
+            {
+                title: '上次登录',
+                dataIndex: 'lastLoginTime',
+                key: 'lastLoginTime',
             },
             {
                 title: '创建时间',
                 dataIndex: 'createTime',
                 key: 'createTime',
-            },
-            {
-                title: '创建人',
-                dataIndex: 'createBy',
-                key: 'createBy',
-            },
-            {
-                title: '修改时间',
-                dataIndex: 'updateTime',
-                key: 'updateTime',
-            },
-            {
-                title: '修改人',
-                dataIndex: 'updateBy',
-                key: 'updateBy',
-            },
+            }
         ],
     }
 
     componentDidMount() {
-        this.props.init();
+        const {current, size} = this.props.storeState;
+        this.props.init(current, size);
     }
 
     setRePwd = e => {
@@ -57,16 +43,17 @@ class Account extends Component {
     }
 
     render() {
-        const {account, dataSource, visible, spin, accountTip, pwdTip, rePwdTip} = this.props.storeState;
+        const {account, dataSource, visible, spin, accountTip, pwdTip, rePwdTip, usernameTip, loading, modalAccount, username, pwd, rePwd, current, total} = this.props.storeState;
         const {
             setAccount,
             search,
             setVisible,
             setModalAccount,
-            setAccountType,
+            setUsername,
             setPwd,
-            setDescription,
-            addAccount
+            addAccount,
+            onShowSizeChange,
+            onPaginationChange
         } = this.props;
         return (
             <Spin delay={500} spinning={spin}>
@@ -75,6 +62,7 @@ class Account extends Component {
                     visible={visible}
                     onOk={addAccount.bind(this, this.props.storeState)}
                     onCancel={setVisible.bind(this, false)}
+                    okButtonProps={{loading: loading}}
                     okText={'新增'}
                     cancelText='取消'
                     maskClosable={false}
@@ -83,23 +71,21 @@ class Account extends Component {
                 >
                     <div className={styles['modal-row']}>
                         <KeyValueInput title={'用户账号'} placeholder={'请输入用户账号'} onChange={setModalAccount}
-                                       tip={accountTip}/>
-                        <KeyValueInput title={'用户类型'} placeholder={'请输入用户类型'} onChange={setAccountType}/>
+                                       tip={accountTip} value={modalAccount}/>
+                        <KeyValueInput title={'用户名'} placeholder={'请输入用户名'} onChange={setUsername}
+                                       tip={usernameTip} value={username}/>
                     </div>
                     <div className={styles['modal-row']}>
-                        <PasswordInput title={'密码'} placeholder={'请输入密码'} onChange={setPwd} tip={pwdTip}/>
-                        <PasswordInput title={'确认密码'} placeholder={'请输入确认密码'} onChange={this.setRePwd} tip={rePwdTip}/>
-                    </div>
-                    <div style={{marginRight: '30px'}}>
-                        <TextAreaInput title={'描述信息'} placeholder={'请输入描述信息'} onChange={setDescription}
-                                       rows={4}/>
+                        <PasswordInput title={'密码'} placeholder={'请输入密码'} onChange={setPwd} tip={pwdTip} value={pwd}/>
+                        <PasswordInput title={'确认密码'} placeholder={'请输入确认密码'} onChange={this.setRePwd}
+                                       tip={rePwdTip} value={rePwd}/>
                     </div>
                 </Modal>
 
 
                 <div className={styles['search-input']}>
                     <div className={styles['search-input-left']}>
-                        <KeyValueInput title={'用户账号'} placeholder={'请输入用户账号'} onChange={setAccount}/>
+                        <KeyValueInputNoTip title={'用户账号'} placeholder={'请输入用户账号'} onChange={setAccount}/>
                     </div>
                     <div className={styles['search-input-right']}>
                         <Button type="primary" onClick={search.bind(this, account)}>搜索</Button>
@@ -108,7 +94,11 @@ class Account extends Component {
                     </div>
                 </div>
                 <Table dataSource={dataSource} columns={this.state.columns}
-                       rowKey={data => data.accountId}/>
+                       rowKey={data => data.id} pagination={false}/>
+                <div className={styles['pagination']}>
+                    <Pagination defaultCurrent={current} total={total} showSizeChanger
+                                onShowSizeChange={onShowSizeChange} onChange={onPaginationChange}/>
+                </div>
             </Spin>
         );
 

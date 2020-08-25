@@ -6,11 +6,15 @@ import {BrowserRouter} from "react-router-dom";
 import './index.css'
 import {Provider} from 'react-redux';
 import store from "./config/store";
+import {ConfigProvider} from 'antd';
+import zhCN from 'antd/es/locale/zh_CN';
 
 ReactDOM.render(
     <Provider store={store}>
         <BrowserRouter>
-            <App/>
+            <ConfigProvider locale={zhCN}>
+                <App/>
+            </ConfigProvider>
         </BrowserRouter>
     </Provider>,
     document.getElementById('root')

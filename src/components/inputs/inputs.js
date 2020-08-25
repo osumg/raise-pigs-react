@@ -5,32 +5,47 @@ import {Menu, Dropdown, Button} from 'antd';
 import {DownOutlined} from '@ant-design/icons';
 
 export function KeyValueInput(props) {
-    const {title, placeholder, onChange, tip} = props;
+    const {title, placeholder, onChange, tip, value} = props;
     return (
         <div className={styles['input-comp']}>
             <div className={styles['main-input']}>
                 <span className={styles['input-span']}>{title}：</span>
-                <Input placeholder={placeholder} allowClear style={{width: '200px'}} onChange={onChange}/>
+                <Input placeholder={placeholder} allowClear style={{width: '200px'}} onChange={onChange} maxLength={18}
+                       value={value}/>
             </div>
             {tip
                 ? <span className={styles['tip']}>{tip}</span>
-                : null
+                : <span className={styles['tip']}> </span>
             }
         </div>
     )
 }
 
-export function PasswordInput(props) {
-    const {title, placeholder, onChange, tip} = props;
+export function KeyValueInputNoTip(props) {
+    const {title, placeholder, onChange, value} = props;
     return (
         <div className={styles['input-comp']}>
             <div className={styles['main-input']}>
                 <span className={styles['input-span']}>{title}：</span>
-                <Input.Password placeholder={placeholder} style={{width: '200px'}} onChange={onChange}/>
+                <Input placeholder={placeholder} allowClear style={{width: '200px'}} onChange={onChange} maxLength={18}
+                       value={value}/>
+            </div>
+        </div>
+    )
+}
+
+export function PasswordInput(props) {
+    const {title, placeholder, onChange, tip, value} = props;
+    return (
+        <div className={styles['input-comp']}>
+            <div className={styles['main-input']}>
+                <span className={styles['input-span']}>{title}：</span>
+                <Input.Password placeholder={placeholder} style={{width: '200px'}} onChange={onChange} maxLength={18}
+                                value={value}/>
             </div>
             {tip
                 ? <span className={styles['tip']}>{tip}</span>
-                : null
+                : <span className={styles['tip']}> </span>
             }
         </div>
     );

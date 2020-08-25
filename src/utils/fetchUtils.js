@@ -14,13 +14,17 @@ const fetchPost = (url, data, successfulCallback) => {
     Promise.race([fetch(url, {
         method: 'POST',
         headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${localStorage.getItem("token")}`
         },
         body: JSON.stringify(data)
     }), fetchDelay()]).then(res => res.json()).then(res => {
         if (res.code === 0) {
             successfulCallback(res.data);
         } else {
+            // if (res.code === 11111) {
+            //     successfulCallback(res);
+            // }
             message.error({
                 content: res.msg,
                 duration: 2,
@@ -39,7 +43,8 @@ const fetchFormPost = (url, data, successfulCallback) => {
     Promise.race([fetch(url, {
         method: 'POST',
         headers: {
-            'Content-Type': 'application/x-www-form-urlencoded'
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'Authorization': `Bearer ${localStorage.getItem("token")}`
         },
         body: data
     }), fetchDelay()]).then(res => res.json()).then(res => {
