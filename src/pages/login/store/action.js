@@ -1,5 +1,5 @@
 import actionType from "./actionType";
-import {fetchFormPost, fetchPost} from "../../../../utils/fetchUtils";
+import {fetchFormPost, fetchPost} from "../../../utils/fetchUtils";
 
 const setUsername = e => {
     return {

@@ -1,9 +1,8 @@
 import React, {Component} from "react";
-import {Table, Pagination} from "antd";
+import {Button, Modal, Pagination, Space, Spin, Table} from "antd";
 import {connect} from 'react-redux';
 import storeAction from './store/action'
 import styles from './account.module.css'
-import {Modal, Button, Spin} from 'antd';
 import {KeyValueInput, KeyValueInputNoTip, PasswordInput} from "../../components/inputs/inputs";
 
 @connect(state => ({storeState: state.accountReducer}), storeAction)
@@ -29,8 +28,33 @@ class Account extends Component {
                 title: '创建时间',
                 dataIndex: 'createTime',
                 key: 'createTime',
+            },
+            {
+                title: '操作',
+                key: 'action',
+                render: (record) => {
+                    return (
+                        <Space size={'middle'}>
+                            <a onClick={this.props.setVisible1.bind(this, true, record.id)}>修改</a>
+                            <a style={{color: 'red'}} onClick={this.deleteById.bind(this, record.id)}>删除</a>
+                        </Space>
+                    )
+                }
             }
         ],
+    }
+
+    deleteById = id => {
+        Modal.confirm({
+            content: '确定删除？',
+            centered: true,
+            okButtonProps: {
+                onClick: () => {
+                    this.props.deleteById(id, this.props.storeState);
+                    Modal.destroyAll();
+                }
+            }
+        })
     }
 
     componentDidMount() {
@@ -43,7 +67,7 @@ class Account extends Component {
     }
 
     render() {
-        const {account, dataSource, visible, spin, accountTip, pwdTip, rePwdTip, usernameTip, loading, modalAccount, username, pwd, rePwd, current, total} = this.props.storeState;
+        const {account, dataSource, visible, spin, accountTip, pwdTip, rePwdTip, usernameTip, loading, modalAccount, username, pwd, rePwd, current, total, visible1, modalAccount1, loading1, usernameTip1, username1} = this.props.storeState;
         const {
             setAccount,
             search,
@@ -53,7 +77,8 @@ class Account extends Component {
             setPwd,
             addAccount,
             onShowSizeChange,
-            onPaginationChange
+            onPaginationChange,
+            modifyAccount, setVisible1, setUsername1
         } = this.props;
         return (
             <Spin delay={500} spinning={spin}>
@@ -82,13 +107,31 @@ class Account extends Component {
                     </div>
                 </Modal>
 
+                <Modal
+                    title="修改账号"
+                    visible={visible1}
+                    onOk={modifyAccount.bind(this, this.props.storeState)}
+                    onCancel={setVisible1.bind(this, false)}
+                    okButtonProps={{loading: loading1}}
+                    okText={'修改'}
+                    cancelText='取消'
+                    maskClosable={false}
+                    centered={true}
+                    width={'60%'}
+                >
+                    <div className={styles['modal-row']}>
+                        <KeyValueInput title={'用户名'} placeholder={'请输入用户名'} onChange={setUsername1}
+                                       tip={usernameTip1} value={username1}/>
+                    </div>
+                </Modal>
+
 
                 <div className={styles['search-input']}>
                     <div className={styles['search-input-left']}>
                         <KeyValueInputNoTip title={'用户账号'} placeholder={'请输入用户账号'} onChange={setAccount}/>
                     </div>
                     <div className={styles['search-input-right']}>
-                        <Button type="primary" onClick={search.bind(this, account)}>搜索</Button>
+                        <Button type="primary" onClick={search.bind(this, this.props.storeState)}>搜索</Button>
                         <Button type="default" style={{marginLeft: '20px'}}
                                 onClick={setVisible.bind(this, true)}>新增</Button>
                     </div>

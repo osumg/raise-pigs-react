@@ -1,11 +1,16 @@
 import React, {Component} from "react";
 import {Route, Switch, withRouter, Redirect} from 'react-router-dom'
-import Login from "./pages/main/login/login";
+import Login from "./pages/login/login";
 import Home from "./pages/Home";
-import {Spin} from 'antd';
-
+import {Modal, Spin} from 'antd';
 
 class App extends Component {
+    componentDidMount() {
+        this.props.history.listen(() => {
+            Modal.destroyAll();
+        });
+    }
+
     render() {
         return (
             <Switch>

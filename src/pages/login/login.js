@@ -1,17 +1,17 @@
 import React, {Component} from "react";
 import styles from './login.module.css';
 import {DashboardOutlined} from '@ant-design/icons';
-import {Input, Checkbox, Button} from "antd";
+import {Button, Checkbox, Input} from "antd";
 import {connect} from "react-redux";
 import storeAction from "./store/action";
-import {fetchFormPost} from "../../../utils/fetchUtils";
+import {fetchLogin} from "../../utils/fetchUtils";
 
 @connect(state => ({storeState: state.loginReducer}), storeAction)
 class Login extends Component {
 
     login = () => {
         let {username, password} = this.props.storeState;
-        fetchFormPost('/login',
+        fetchLogin('/login',
             'username=' + username +
             '&password=' + password, res => {
                 localStorage.setItem("token", res.token);

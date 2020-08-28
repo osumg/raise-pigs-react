@@ -1,5 +1,6 @@
 import actionType from "./actionType";
-import {fetchGet, fetchPost} from "../../../utils/fetchUtils";
+import {fetchDelete, fetchGet, fetchPost, fetchPut} from "../../../utils/fetchUtils";
+import {Modal} from "antd";
 
 const showSpin = fun => {
     fun({
@@ -48,15 +49,28 @@ const setUsername = e => {
     }
 }
 
+const setUsername1 = e => {
+    let username1 = e.target.value.trim();
+    return {
+        type: actionType.SET_USERNAME_1,
+        username1,
+        usernameTip1: ''
+    }
+}
 
-const search = account => {
+
+const search = (storeState) => {
+    const {account, current, size} = storeState;
     return dispatch => {
         showSpin(dispatch);
-        fetchPost('/service/sys-user/find-by', {account}, res => {
+        fetchPost('/service/sys-user/find-by', {account, current, size}, res => {
             dispatch({
                 type: actionType.INIT,
-                dataSource: res,
-                spin: false
+                dataSource: res.records,
+                total: res.total,
+                current: current,
+                size: size,
+                spin: false,
             })
         })
     }
@@ -66,6 +80,14 @@ const setVisible = visible => {
     return {
         type: actionType.SET_VISIBLE,
         visible
+    }
+}
+
+const setVisible1 = (visible1, id) => {
+    return {
+        type: actionType.SET_VISIBLE_1,
+        visible1,
+        updateId: id
     }
 }
 
@@ -143,7 +165,6 @@ const addAccountFetch = (dispatch, storeState) => {
             loading: false,
             visible: false
         });
-
         getListData(dispatch, current, size);
     })
 }
@@ -169,7 +190,7 @@ const addAccount = (storeState) => {
     if (!username || usernameTip) {
         return {
             type: actionType.ADD_CHECK,
-            accountTip: usernameTip || '用户账号不能为空'
+            accountTip: usernameTip || '用户名不能为空'
         }
     }
     if (!pwd || pwdTip) {
@@ -205,7 +226,42 @@ const addAccount = (storeState) => {
             }
         })
     }
+}
 
+const modifyAccount = (storeState) => {
+    const {
+        updateId,
+        username1,
+        usernameTip1,
+        current,
+        size
+    } = storeState;
+
+    if (!username1 || usernameTip1) {
+        return {
+            type: actionType.ADD_CHECK,
+            accountTip: usernameTip1 || '用户名不能为空'
+        }
+    }
+
+    return dispatch => {
+        dispatch({
+            type: actionType.MODIFY_BEFORE,
+            loading1: true
+        })
+        fetchPut('/service/sys-user/modify', {
+            id: updateId,
+            username: username1,
+        }, res => {
+            dispatch({
+                type: actionType.MODIFY_AFTER,
+                loading1: false,
+                visible1: false
+            });
+
+            getListData(dispatch, current, size);
+        })
+    }
 }
 
 const onShowSizeChange = (current, pageSize) => {
@@ -215,10 +271,17 @@ const onShowSizeChange = (current, pageSize) => {
 }
 
 const onPaginationChange = (page, pageSize) => {
-    console.log('page:', page);
-    console.log('pageSize:', pageSize);
     return dispatch => {
         getListData(dispatch, page, pageSize);
+    }
+}
+
+const deleteById = (id, storeState) => {
+    const {current, size} = storeState;
+    return dispatch => {
+        fetchDelete(`/service/sys-user/delete/${id}`, res => {
+            getListData(dispatch, current, size);
+        })
     }
 }
 
@@ -233,5 +296,9 @@ export default {
     addAccount,
     setUsername,
     onShowSizeChange,
-    onPaginationChange
+    onPaginationChange,
+    modifyAccount,
+    setVisible1,
+    setUsername1,
+    deleteById
 }

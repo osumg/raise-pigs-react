@@ -1,8 +1,8 @@
 import React, {Component} from "react";
 import {routes} from '../config/routes'
-import {Switch, Route, withRouter} from 'react-router-dom'
-import {Layout, Menu} from 'antd';
-import {UserOutlined, LaptopOutlined, NotificationOutlined, AppleOutlined} from '@ant-design/icons';
+import {Switch, Route, withRouter, Redirect} from 'react-router-dom'
+import {Layout, Menu, Breadcrumb} from 'antd';
+import {UserOutlined, AppstoreOutlined, NotificationOutlined, AppleOutlined, BugOutlined} from '@ant-design/icons';
 
 const {SubMenu} = Menu;
 const {Header, Content, Sider} = Layout;
@@ -40,7 +40,7 @@ class Home extends Component {
                                 <Menu.Item key="3">option3</Menu.Item>
                                 <Menu.Item key="4">option4</Menu.Item>
                             </SubMenu>
-                            <SubMenu key="sub2" icon={<LaptopOutlined/>} title="subnav 2">
+                            <SubMenu key="pigs" icon={<AppstoreOutlined/>} title="**管理">
                                 <Menu.Item key="5">option5</Menu.Item>
                                 <Menu.Item key="6">option6</Menu.Item>
                                 <Menu.Item key="7">option7</Menu.Item>
@@ -54,17 +54,23 @@ class Home extends Component {
                             </SubMenu>
                         </Menu>
                     </Sider>
-                    <Layout className="site-layout" style={{marginLeft: 200}}>
+                    <Layout className="site-layout" style={{marginLeft: '200px'}}>
+                        <Breadcrumb style={{margin: '10px 20px'}}>
+                            <Breadcrumb.Item>Home</Breadcrumb.Item>
+                            <Breadcrumb.Item>List</Breadcrumb.Item>
+                            <Breadcrumb.Item>App</Breadcrumb.Item>
+                        </Breadcrumb>
                         <Content
                             className="site-layout-background"
                             style={{
                                 padding: 16,
                                 margin: 0,
-                                minHeight: 280,
+                                minHeight: '280px',
                             }}
                         >
                             <Switch>
                                 {routes.map(item => <Route key={item.path} {...item}/>)}
+                                <Redirect path="/" to="/service/account"/>
                             </Switch>
                         </Content>
                     </Layout>
