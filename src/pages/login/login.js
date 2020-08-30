@@ -15,7 +15,7 @@ class Login extends Component {
             'username=' + username +
             '&password=' + password, res => {
                 localStorage.setItem("token", res.token);
-                localStorage.setItem("userInfo", res.userInfo);
+                localStorage.setItem("userInfo", JSON.stringify(res.userInfo));
                 this.props.history.push("/service");
             })
     }
@@ -38,7 +38,6 @@ class Login extends Component {
             setUsername,
             setPassword,
             changeLoginType,
-            login
         } = this.props;
         return (
             <div className={styles.main}>

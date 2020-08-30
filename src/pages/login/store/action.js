@@ -23,23 +23,8 @@ const changeLoginType = isLogin => {
     }
 }
 
-const login = (storeState,that) => {
-    console.log(storeState.password);
-    return dispatch => {
-        fetchFormPost('/login',
-            'username=' + storeState.username +
-            '&password=' + storeState.password, res => {
-                localStorage.setItem("token", res.token);
-                localStorage.setItem("userInfo", res.userInfo);
-            })
-    }
-
-}
-
-
 export default {
     setUsername,
     setPassword,
     changeLoginType,
-    login
 }
