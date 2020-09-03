@@ -271,12 +271,14 @@ const onShowSizeChange = (current, pageSize) => {
 }
 
 const onPaginationChange = (page, pageSize) => {
-    return dispatch => {
+    return (dispatch, getState) => {
         getListData(dispatch, page, pageSize);
     }
 }
 
 const deleteById = (id, storeState) => {
+    // const offset = getState().main.listOffset;
+    //         const ListItemData = getState().main.ListItemData;
     const {current, size} = storeState;
     return dispatch => {
         fetchDelete(`/service/sys-user/delete/${id}`, res => {

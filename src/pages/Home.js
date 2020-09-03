@@ -1,14 +1,19 @@
 import React, {Component} from "react";
-import {routes} from '../config/routes'
-import {Redirect, Route, Switch} from 'react-router-dom'
-import {Breadcrumb, Layout, Menu, Tabs} from 'antd';
+import {Breadcrumb, Layout, Menu, Modal, Tabs} from 'antd';
 import {MenuFoldOutlined, MenuUnfoldOutlined, UserOutlined,} from '@ant-design/icons';
+import {renderRoutes} from "react-router-config";
 
 const {SubMenu} = Menu;
 const {Header, Content, Sider} = Layout;
 const {TabPane} = Tabs;
 
 class Home extends Component {
+    componentDidMount() {
+        this.props.history.listen(() => {
+            Modal.destroyAll();
+        });
+    }
+
     toPath = (path) => {
         this.props.history.push(`${path}`);
     }
@@ -70,11 +75,11 @@ class Home extends Component {
                     <div className="logo" style={{height: '40px'}}/>
                     <Menu theme="dark" mode="inline" defaultSelectedKeys={['1']}>
                         <SubMenu key="sub1" icon={<UserOutlined/>} title="权限管理">
-                            <Menu.Item key="1" onClick={this.toPath.bind(this, '/service/account')}>用户管理</Menu.Item>
-                            <Menu.Item key="2">角色管理</Menu.Item>
+                            <Menu.Item key="1" onClick={this.toPath.bind(this, '/home/account')}>用户管理</Menu.Item>
+                            <Menu.Item key="2" onClick={this.toPath.bind(this, '/home/pig')}>角色管理</Menu.Item>
                         </SubMenu>
                         <SubMenu key="sub2" icon={<UserOutlined/>} title="**管理">
-                            <Menu.Item key="3" onClick={this.toPath.bind(this, '/service/account')}>**情况</Menu.Item>
+                            <Menu.Item key="3" onClick={this.toPath.bind(this, '/home/pigsty')}>**情况</Menu.Item>
                             <Menu.Item key="4">种类管理</Menu.Item>
                         </SubMenu>
                         <SubMenu key="sub3" icon={<UserOutlined/>} title="资产管理">
@@ -130,14 +135,10 @@ class Home extends Component {
                         >
                             {this.state.panes.map(pane => (
                                 <TabPane tab={pane.title} key={pane.key}>
-                                    <Switch>
-                                        {routes.map(item => <Route key={item.path} {...item}/>)}
-                                        <Redirect path="/" to="/service/account"/>
-                                    </Switch>
+                                    {renderRoutes(this.props.route.routes)}
                                 </TabPane>
                             ))}
                         </Tabs>
-
                     </Content>
                 </div>
             </Layout>
