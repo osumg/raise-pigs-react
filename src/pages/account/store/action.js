@@ -1,6 +1,5 @@
 import actionType from "./actionType";
 import {fetchDelete, fetchGet, fetchPost, fetchPut} from "../../../utils/fetchUtils";
-import {Modal} from "antd";
 
 const showSpin = fun => {
     fun({

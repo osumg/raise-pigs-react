@@ -19,7 +19,7 @@ export default [
             {
                 path: '/home',
                 exact: true,
-                render: () => <Redirect to={"/home/pig"}/>
+                render: () => <Redirect to={"/home/account"}/>
             },
             {
                 path: '/home/pig',
