@@ -243,6 +243,10 @@ const modifyAccount = (storeState) => {
         }
     }
 
+    console.log('updateId', updateId)
+
+
+
     return dispatch => {
         dispatch({
             type: actionType.MODIFY_BEFORE,

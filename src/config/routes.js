@@ -5,6 +5,8 @@ import Account from "../pages/account/account";
 import Pig from "../pages/pig/pig";
 import Pigsty from "../pages/pigsty/pigsty";
 import Login from "../pages/login/login";
+import NotFound from "./notFound";
+import MainPage from "./mainPage";
 
 export default [
     {
@@ -19,24 +21,33 @@ export default [
             {
                 path: '/home',
                 exact: true,
-                render: () => <Redirect to={"/home/account"}/>
+                render: () => <Redirect to={"/home/main-page"}/>
             },
             {
-                path: '/home/pig',
+                path: '/home/main/pig',
                 component: Pig
             },
             {
-                path: '/home/account',
+                path: '/home/authority/account',
                 component: Account
             },
             {
                 path: '/home/pigsty',
                 component: Pigsty
+            },
+            {
+                path: '/home/main-page',
+                component: MainPage
             }
         ]
     },
     {
         path: '/login',
+        exact: true,
         component: Login
+    },
+    {
+        path: '/*',
+        component: NotFound
     }
 ]

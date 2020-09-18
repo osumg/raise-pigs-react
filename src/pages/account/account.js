@@ -33,6 +33,7 @@ class Account extends Component {
                 title: '操作',
                 key: 'action',
                 render: (record) => {
+                    console.log('record:',record);
                     return (
                         <Space size={'middle'}>
                             <a onClick={this.props.setVisible1.bind(this, true, record.id)}>修改</a>
@@ -87,7 +88,7 @@ class Account extends Component {
                     visible={visible}
                     onOk={addAccount.bind(this, this.props.storeState)}
                     onCancel={setVisible.bind(this, false)}
-                    okButtonProps={{loading: loading}}
+                    okButtonProps={{loading}}
                     okText={'新增'}
                     cancelText='取消'
                     maskClosable={false}
@@ -128,7 +129,8 @@ class Account extends Component {
 
                 <div className={styles['search-input']}>
                     <div className={styles['search-input-left']}>
-                        <KeyValueInputNoTip title={'用户账号'} placeholder={'请输入用户账号'} onChange={setAccount}/>
+                        <KeyValueInputNoTip title={'用户账号'} placeholder={'请输入用户账号'} onChange={setAccount}
+                                            value={account}/>
                     </div>
                     <div className={styles['search-input-right']}>
                         <Button type="primary" onClick={search.bind(this, this.props.storeState)}>搜索</Button>

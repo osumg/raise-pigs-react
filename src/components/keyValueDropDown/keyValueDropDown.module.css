@@ -1,0 +1,31 @@
+.drop-down-div {
+    display: flex;
+    color: #333;
+    width: 300px;
+    align-items: center;
+    margin:0;
+    padding:0;
+}
+
+.drop-down-left {
+    width: 100px;
+    text-align: right;
+}
+
+.drop-down-right {
+    width: 200px;
+}
+
+.content{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border: 1px solid #ddd;
+    padding: 4px 10px;
+    border-radius: 2px;
+}
+
+.tip{
+    font-size: 12px;
+    margin-left: 100px;
+}

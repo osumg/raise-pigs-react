@@ -2,59 +2,99 @@ import React, {Component} from "react";
 import {Breadcrumb, Layout, Menu, Modal, Tabs} from 'antd';
 import {MenuFoldOutlined, MenuUnfoldOutlined, UserOutlined,} from '@ant-design/icons';
 import {renderRoutes} from "react-router-config";
+import menu from "../config/menu";
 
 const {SubMenu} = Menu;
 const {Header, Content, Sider} = Layout;
 const {TabPane} = Tabs;
 
 class Home extends Component {
-    state = {
-        collapsed: false,
+    constructor(props) {
+        super(props);
 
-        upName: '权限管理',
-        downName: '用户管理',
-        openKeys: ['sub1'],
-        selectedKeys: ['1'],
+        let pathname = menu[0].menus[0].url;
+        this.state = {
+            collapsed: false,
 
-        activeKey: '/home/account',
-        panes: [
-            {title: '用户管理', key: '/home/account', path: '/home/account', selectedKeys: ['1']},
-        ]
-    };
+            upName: menu[0].title,
+            downName: menu[0].menus[0].subTitle,
+
+            //打开和选中的菜单key
+            openKeys: [menu[0].key],
+            selectedKeys: [pathname],
+
+            activeKey: pathname,
+            panes: [
+                {title: menu[0].menus[0].subTitle, key: pathname},
+            ]
+        };
+    }
+
 
     componentDidMount() {
         this.props.history.listen(() => {
             Modal.destroyAll();
         });
+        let pathname = this.props.location.pathname;
+        let upName = '首页';
+        let downName = '';
+        let openKeys = [];
+        menu.map(item => {
+            if (pathname.split('/')[2] === item.key) {
+                upName = item.title;
+                openKeys = [item.key];
+            }
+            item.menus && item.menus.map(ele => {
+                if (pathname === ele.url) {
+                    downName = ele.subTitle;
+                }
+            })
+        })
+
+        let panes;
+        if (upName === '首页') {
+            panes = [];
+        }else {
+            panes = [
+                {title: downName, key: pathname}
+            ];
+        }
+
+        this.setState({
+            upName,
+            downName,
+            openKeys,
+            selectedKeys: [pathname],
+            activeKey: pathname,
+            panes
+        });
     }
 
-    toPath = (path, upName, name, selectedKeys) => {
+    toPath = (path, upName, downName) => {
         const {panes} = this.state;
 
         for (let i = 0; i < panes.length; i++) {
-            if (path === panes[i].path) {
-                this.setState({activeKey: panes[i].key})
-                this.props.history.replace(panes[i].path);
+            if (path === panes[i].key) {
                 this.setState({
+                    activeKey: panes[i].key,
                     upName,
-                    downName: name
+                    downName
+                }, () => {
+                    this.props.history.replace(panes[i].key);
                 })
                 return;
             }
         }
 
-        const activeKey = path;
         panes.push({
-            title: name,
-            key: activeKey,
-            path,
-            selectedKeys
+            title: downName,
+            key: path
         });
 
         this.setState({
-            panes, activeKey,
+            panes, activeKey: path,
             upName,
-            downName: name
+            downName
         }, () => {
             this.props.history.replace(path);
         })
@@ -70,7 +110,7 @@ class Home extends Component {
     onChange = activeKey => {
         this.state.panes.map(pane => {
             if (activeKey === pane.key) {
-                this.props.history.replace(pane.path)
+                this.props.history.replace(pane.key)
             }
         })
 
@@ -82,7 +122,7 @@ class Home extends Component {
     };
 
     remove = targetKey => {
-        let {activeKey, selectedKeys} = this.state;
+        let {activeKey} = this.state;
         let lastIndex;
         this.state.panes.forEach((pane, i) => {
             if (pane.key === targetKey) {
@@ -97,16 +137,21 @@ class Home extends Component {
         if (panes.length && activeKey === targetKey) {
             if (lastIndex >= 0) {
                 activeKey = panes[lastIndex].key;
-                selectedKeys = panes[lastIndex].selectedKeys;
-                this.props.history.replace(panes[lastIndex].path);
-
+                this.props.history.replace(panes[lastIndex].key);
             } else {
                 activeKey = panes[0].key;
-                selectedKeys = panes[0].selectedKeys;
-                this.props.history.replace(panes[0].path);
+                this.props.history.replace(panes[0].key);
             }
         }
-        this.setState({panes, selectedKeys, activeKey});
+
+        if (panes.length === 0) {
+            this.setState({
+                upName: '首页',
+                downName: ''
+            })
+            this.props.history.replace('/home/main-page');
+        }
+        this.setState({panes, selectedKeys: [activeKey], activeKey});
     };
 
     //SubMenu 展开/关闭的回调,设置每次只打开一个块
@@ -118,9 +163,6 @@ class Home extends Component {
 
     //被选中时调用
     onSelect = ({item, key, keyPath, selectedKeys}) => {
-        console.log('item:', item);
-        console.log('key:', key);
-        console.log('keyPath:', keyPath);
         this.setState({
             selectedKeys
         })
@@ -138,23 +180,15 @@ class Home extends Component {
                     left: 0,
                 }}>
                     <div className="logo" style={{height: '40px'}}/>
-                    <Menu theme="dark" mode="inline" defaultOpenKeys={['sub1']} openKeys={this.state.openKeys}
-                          defaultSelectedKeys={['1']} selectedKeys={this.state.selectedKeys}
+                    <Menu theme="dark" mode="inline" openKeys={this.state.openKeys}
+                          selectedKeys={this.state.selectedKeys}
                           onOpenChange={this.onOpenChange} onSelect={this.onSelect}>
-                        <SubMenu key="sub1" icon={<UserOutlined/>} title="权限管理">
-                            <Menu.Item key="1"
-                                       onClick={this.toPath.bind(this, '/home/account', '权限管理', '用户管理', ['1'])}>用户管理</Menu.Item>
-                            <Menu.Item key="2"
-                                       onClick={this.toPath.bind(this, '/home/pig', '权限管理', '角色管理', ['2'])}>角色管理</Menu.Item>
-                        </SubMenu>
-                        <SubMenu key="sub2" icon={<UserOutlined/>} title="**管理">
-                            <Menu.Item key="3" onClick={this.toPath.bind(this, '/home/pigsty')}>**情况</Menu.Item>
-                            <Menu.Item key="4">种类管理</Menu.Item>
-                        </SubMenu>
-                        <SubMenu key="sub3" icon={<UserOutlined/>} title="资产管理">
-                            <Menu.Item key="5" onClick={this.toPath.bind(this, '/service/account')}>圈管理</Menu.Item>
-                            <Menu.Item key="6">饲料管理</Menu.Item>
-                        </SubMenu>
+                        {menu.map(({title, key, icon, menus}) => <SubMenu key={key} icon={icon} title={title}>
+                            {menus.map(({subTitle, url}) => <Menu.Item key={url}
+                                                                       onClick={this.toPath.bind(this, url, title, subTitle)}>{subTitle}</Menu.Item>
+                            )}
+                        </SubMenu>)}
+
                     </Menu>
                 </Sider>
                 <div style={{
@@ -204,41 +238,15 @@ class Home extends Component {
                             onEdit={this.onEdit}
                         >
                             {this.state.panes.map(pane => (
-                                <TabPane tab={pane.title} key={pane.key}>
-                                    {renderRoutes(this.props.route.routes)}
-                                </TabPane>
+                                <TabPane tab={pane.title} key={pane.key}/>
                             ))}
-
                         </Tabs>
-
+                        {renderRoutes(this.props.route.routes)}
                     </Content>
                 </div>
             </Layout>
         );
     }
-}
-
-function RouteTabs(props) {
-
-    const {onChange, activeKey, onEdit, panes} = props;
-
-    return (
-        <Tabs
-            hideAdd
-            onChange={onChange}
-            activeKey={activeKey}
-            type="editable-card"
-            onEdit={onEdit}
-        >
-            {panes.map(pane => (
-                <TabPane tab={pane.title} key={pane.key}>
-                    {this.props.route.component}
-                </TabPane>
-            ))}
-
-        </Tabs>
-    )
-
 }
 
 export default Home;
